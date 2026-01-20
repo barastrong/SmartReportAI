@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { Lock, Mail } from "lucide-react-native";
+import { Eye, EyeOff, Lock, Mail } from "lucide-react-native";
 import React, { useState } from "react";
 import {
     ActivityIndicator,
@@ -19,6 +19,7 @@ const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   // For Android emulator, use 10.0.2.2 instead of localhost
   // For physical device, use your machine IP (e.g., 192.168.x.x)
@@ -116,8 +117,18 @@ const Login = () => {
                   placeholderTextColor="#94a3b8"
                   value={password}
                   onChangeText={setPassword}
-                  secureTextEntry
+                  secureTextEntry={!showPassword}
                 />
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                  style={styles.eyeIcon}
+                >
+                  {showPassword ? (
+                    <EyeOff size={20} color="#64748b" />
+                  ) : (
+                    <Eye size={20} color="#64748b" />
+                  )}
+                </TouchableOpacity>
               </View>
             </View>
 
@@ -209,6 +220,10 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     fontSize: 16,
     color: "#1e293b",
+  },
+  eyeIcon: {
+    padding: 8,
+    marginRight: 4,
   },
   button: {
     backgroundColor: "#2563eb",

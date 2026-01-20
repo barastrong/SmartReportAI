@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { Lock, Mail, User } from "lucide-react-native";
+import { Eye, EyeOff, Lock, Mail, User } from "lucide-react-native";
 import React, { useState } from "react";
 import {
     ActivityIndicator,
@@ -22,6 +22,9 @@ const Register = () => {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState<boolean>(false);
 
   // For Android emulator, use 10.0.2.2 instead of localhost
   // For physical device, use your machine IP (e.g., 192.168.x.x)
@@ -165,8 +168,18 @@ const Register = () => {
                   placeholderTextColor="#94a3b8"
                   value={password}
                   onChangeText={setPassword}
-                  secureTextEntry
+                  secureTextEntry={!showPassword}
                 />
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                  style={styles.eyeIcon}
+                >
+                  {showPassword ? (
+                    <EyeOff size={20} color="#64748b" />
+                  ) : (
+                    <Eye size={20} color="#64748b" />
+                  )}
+                </TouchableOpacity>
               </View>
             </View>
 
@@ -180,8 +193,18 @@ const Register = () => {
                   placeholderTextColor="#94a3b8"
                   value={confirmPassword}
                   onChangeText={setConfirmPassword}
-                  secureTextEntry
+                  secureTextEntry={!showConfirmPassword}
                 />
+                <TouchableOpacity
+                  onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                  style={styles.eyeIcon}
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff size={20} color="#64748b" />
+                  ) : (
+                    <Eye size={20} color="#64748b" />
+                  )}
+                </TouchableOpacity>
               </View>
             </View>
 
@@ -272,6 +295,10 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     fontSize: 16,
     color: "#1e293b",
+  },
+  eyeIcon: {
+    padding: 8,
+    marginRight: 4,
   },
   button: {
     backgroundColor: "#10b981",
