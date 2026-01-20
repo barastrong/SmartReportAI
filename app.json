@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ReportAIApp",
-    "slug": "ReportAIApp",
+    "name": "Smart Report AI",
+    "slug": "SmartReportAI",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
