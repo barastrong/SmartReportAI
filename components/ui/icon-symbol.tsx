@@ -26,6 +26,7 @@ const MAPPING = {
   "chevron.right": "chevron-right",
   "person.fill": "person",
   "activity": "query-stats",
+  "report": "description",
 } satisfies IconMapping;
 
 /**
