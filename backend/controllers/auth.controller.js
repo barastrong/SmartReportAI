@@ -15,6 +15,7 @@ exports.register = async (req, res) => {
 
     email = email.trim().toLowerCase();
     name = name.trim();
+    const defaultRole = "User"; // Auto-assign role
 
     if (password.length < 8) {
       return res.status(400).json({ message: "Password minimal 8 karakter" });
@@ -38,11 +39,12 @@ exports.register = async (req, res) => {
     );
 
     await db.query(
-      "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
-      [name, email, hashedPassword],
+      "INSERT INTO users (name, email, role, password) VALUES (?, ?, ?, ?)",
+      [name, email, defaultRole, hashedPassword],
     );
 
     console.log("✅ Register berhasil untuk:", email);
+    console.log("👤 Role assigned:", defaultRole);
     res.status(201).json({ message: "Register berhasil" });
   } catch (err) {
     console.error("❌ Register error:", err.message);

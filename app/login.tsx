@@ -1,16 +1,17 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react-native";
 import React, { useState } from "react";
 import {
-    ActivityIndicator,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -56,6 +57,12 @@ const Login = () => {
 
       if (response.ok) {
         console.log("✅ Login successful!");
+        console.log("💾 Saving token to AsyncStorage...");
+
+        // Save token to AsyncStorage
+        await AsyncStorage.setItem("authToken", data.token);
+        console.log("✅ Token saved!");
+
         alert(data.message || "Login berhasil");
         router.replace("/(tabs)");
       } else {

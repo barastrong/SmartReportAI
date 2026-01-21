@@ -3,12 +3,21 @@ const cors = require("cors");
 require("dotenv").config();
 
 const authRoutes = require("./routes/route");
+const { addPhotoColumnIfNotExists } = require("./migrations/addPhotoColumn");
+const {
+  addRoleAndMottoColumnsIfNotExist,
+} = require("./migrations/addRoleAndMotto");
 
 const app = express();
 const PORT = process.env.SERVER_PORT || 5000;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb" }));
+
+// Run migrations on startup
+addPhotoColumnIfNotExists();
+addRoleAndMottoColumnsIfNotExist();
 
 app.use("/api/auth", authRoutes);
 
