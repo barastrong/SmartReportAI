@@ -131,7 +131,7 @@ const Register = () => {
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Nama Lengkap</Text>
               <View style={styles.inputWrapper}>
-                <User size={20} color="#64748b" />
+                <User size={20} color="#10b981" />
                 <TextInput
                   style={styles.input}
                   placeholder="Nama lengkap kamu"
@@ -145,7 +145,7 @@ const Register = () => {
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Email</Text>
               <View style={styles.inputWrapper}>
-                <Mail size={20} color="#64748b" />
+                <Mail size={20} color="#10b981" />
                 <TextInput
                   style={styles.input}
                   placeholder="email@example.com"
@@ -161,7 +161,7 @@ const Register = () => {
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Password</Text>
               <View style={styles.inputWrapper}>
-                <Lock size={20} color="#64748b" />
+                <Lock size={20} color="#10b981" />
                 <TextInput
                   style={styles.input}
                   placeholder="••••••••"
@@ -186,7 +186,7 @@ const Register = () => {
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Konfirmasi Password</Text>
               <View style={styles.inputWrapper}>
-                <Lock size={20} color="#64748b" />
+                <Lock size={20} color="#10b981" />
                 <TextInput
                   style={styles.input}
                   placeholder="••••••••"
@@ -227,7 +227,7 @@ const Register = () => {
               style={styles.footerLink}
             >
               <Text style={styles.footerText}>
-                Sudah punya akun?{" "}
+                Already have account?{" "}
                 <Text style={styles.linkHighlight}>Login</Text>
               </Text>
             </TouchableOpacity>
@@ -241,7 +241,7 @@ const Register = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#F6FBF7",
   },
   flex: {
     flex: 1,
@@ -280,14 +280,9 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   inputWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#f8fafc",
-    borderWidth: 1,
-    borderColor: "#e2e8f0",
-    borderRadius: 16,
-    paddingHorizontal: 16,
-    height: 56,
+    flexDirection: "row", alignItems: "center", backgroundColor: 'white',
+    borderWidth: 1.5, borderColor: '#E5E7EB', borderRadius: 16,
+    paddingHorizontal: 18, height: 64,
   },
   input: {
     flex: 1,

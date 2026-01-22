@@ -60,11 +60,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     width: "100%",
   },
-  primary: { backgroundColor: "#2563eb" },
+  primary: { backgroundColor: "#10b981" },
   outline: {
     backgroundColor: "transparent",
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: "#cdd3db",
   },
   destructive: { backgroundColor: "#ef4444" },
   danger: {

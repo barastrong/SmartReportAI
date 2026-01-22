@@ -46,9 +46,9 @@ const SliderInput: React.FC<SliderInputProps> = ({ label, value, onChange, label
         step={1}
         value={value}
         onValueChange={(val) => onChange(val)}
-        minimumTrackTintColor="#2563eb" // Warna garis kiri
-        maximumTrackTintColor="#e2e8f0" // Warna garis kanan
-        thumbTintColor="#2563eb"        // Warna bulatan penggeser
+        minimumTrackTintColor="#10b981" // Warna garis kiri
+        maximumTrackTintColor="#a1a6ac" // Warna garis kanan
+        thumbTintColor="#10b981"        // Warna bulatan penggeser
       />
       
       <View style={styles.rangeIndicator}>
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
   valueLabel: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#2563eb",
+    color: "#10b981",
   },
   numericInputRow: {
     flexDirection: "row",
