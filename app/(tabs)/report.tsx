@@ -1,51 +1,96 @@
 import React from "react";
-import { StyleSheet, Text, View, Dimensions } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { BarChart3, Info } from "lucide-react-native";
-import { AppButton } from "@/components/ui/appbutton"; // Pastikan path benar
-import { useRouter } from "expo-router";
+import { 
+  StyleSheet, 
+  View, 
+  Text, 
+  ScrollView, 
+  SafeAreaView 
+} from "react-native";
+import { ReportCard } from "@/components/reportcard";
+import { 
+  Sparkles, 
+  Info, 
+  Heart, 
+  Brain, 
+  Star 
+} from "lucide-react-native"; // Import Ikon
 
-const { height } = Dimensions.get("window");
+const COLORS = {
+  background: "#F6FBF7",
+  surface: "#FFFFFF",
+  primary: "#10b981",
+  secondary: "#89ceb5",
+  accent: "#DCEFE6",
+  textMain: "#1F2937",
+  textSecondary: "#6B7280",
+  border: "#E5E7EB",
+};
 
 const ReportScreen = () => {
-  const router = useRouter();
-
-  const handleGoToActivity = () => {
-    // Navigasi ke tab activity
-    router.push("/activity");
-  };
-
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        {/* Lingkaran Ikon */}
-        <View style={styles.iconCircle}>
-          <BarChart3 size={60} color="#2563eb" strokeWidth={1.5} />
-        </View>
-
-        {/* Teks Informasi */}
-        <Text style={styles.title}>Belum Ada Laporan</Text>
-        <Text style={styles.description}>
-          Analisis AI akan muncul di sini setelah kamu mencatat aktivitas harianmu. Mulailah mencatat hari ini!
-        </Text>
-
-        {/* Tip Box (Opsional) */}
-        <View style={styles.tipBox}>
-          <Info size={18} color="#64748b" />
-          <Text style={styles.tipText}>
-            Tip: Catat aktivitas minimal 3 hari berturut-turut untuk mendapatkan tren kesehatan yang akurat.
+      <ScrollView 
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* JUDUL HALAMAN */}
+        <View style={styles.titleSection}>
+          <Text style={styles.mainTitle}>Laporan Mingguan</Text>
+          <Text style={styles.subtitle}>
+            Analisis kecerdasan buatan untuk aktivitasmu
           </Text>
         </View>
 
-        {/* Tombol Aksi */}
-        <View style={styles.buttonContainer}>
-          <AppButton 
-            title="Catat Aktivitas Sekarang" 
-            variant="primary" 
-            onPress={handleGoToActivity} 
-          />
+        {/* AI SUMMARY CARD */}
+        <View style={styles.summaryCard}>
+          <View style={styles.summaryHeader}>
+            <View style={styles.aiBadge}>
+              <Sparkles size={14} color="#FFFFFF" />
+              <Text style={styles.aiBadgeText}>AI INSIGHT</Text>
+            </View>
+          </View>
+          <Text style={styles.summaryText}>
+            Berdasarkan data minggu ini, kamu menunjukkan stabilitas pada kesehatan mental, namun perlu memperhatikan durasi tidur harianmu. 
+            <Text style={styles.highlightText}> Fokus tingkatkan konsistensi olahraga!</Text>
+          </Text>
         </View>
-      </View>
+
+        {/* LIST LAPORAN DENGAN IKON */}
+        <View style={styles.listContainer}>
+          
+          <ReportCard
+            title="Physical Health"
+            score={78}
+            recommendation="Tingkatkan durasi tidur menjadi 7-8 jam per malam. Tambahkan aktivitas cardio ringan di pagi hari."
+            icon={<Heart size={20} color="red" />} // Kirim ikon sebagai prop
+          />
+
+          <ReportCard
+            title="Mental Health"
+            score={85}
+            recommendation="Sangat baik! Pertahankan rutinitas mindfulness dan kurangi penggunaan gadget sebelum tidur."
+            icon={<Brain size={20} color="blue" />} // Kirim ikon sebagai prop
+          />
+
+          <ReportCard
+            title="Character"
+            score={72}
+            recommendation="Kedisiplinan meningkat, namun tingkat empati perlu perhatian lebih melalui interaksi sosial."
+            icon={<Star size={20} color="orange" />} // Kirim ikon sebagai prop
+          />
+
+        </View>
+
+        {/* INFO BOX */}
+        <View style={styles.infoBox}>
+          <Info size={16} color={COLORS.textSecondary} />
+          <Text style={styles.infoText}>
+            Data diperbarui secara otomatis setiap hari Senin pukul 00.00.
+          </Text>
+        </View>
+
+        <View style={{ height: 40 }} />
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -53,58 +98,82 @@ const ReportScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    backgroundColor: COLORS.background,
   },
-  content: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 40,
-    // Memberikan sedikit offset ke atas agar tidak terlalu di tengah mati
-    paddingBottom: height * 0.1,
+  scrollContent: {
+    padding: 24,
   },
-  iconCircle: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: "#eff6ff",
-    alignItems: "center",
-    justifyContent: "center",
+  titleSection: {
     marginBottom: 24,
   },
-  title: {
-    fontSize: 22,
-    fontWeight: "700",
-    color: "#1e293b",
-    marginBottom: 12,
-    textAlign: "center",
+  mainTitle: {
+    fontSize: 28,
+    fontWeight: "800",
+    color: COLORS.textMain,
+    marginBottom: 6,
   },
-  description: {
+  subtitle: {
     fontSize: 15,
-    color: "#64748b",
-    textAlign: "center",
+    color: COLORS.textSecondary,
     lineHeight: 22,
-    marginBottom: 32,
   },
-  tipBox: {
-    flexDirection: "row",
-    backgroundColor: "#f8fafc",
-    padding: 16,
-    borderRadius: 16,
+  summaryCard: {
+    backgroundColor: COLORS.surface,
+    borderRadius: 24,
+    padding: 20,
+    marginBottom: 24,
     borderWidth: 1,
-    borderColor: "#f1f5f9",
+    borderColor: COLORS.border,
+    elevation: 3,
+    shadowColor: COLORS.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+  },
+  summaryHeader: {
+    flexDirection: "row",
+    marginBottom: 12,
+  },
+  aiBadge: {
+    flexDirection: "row",
     alignItems: "center",
-    gap: 12,
-    marginBottom: 40,
+    backgroundColor: COLORS.primary,
+    paddingVertical: 5,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+    gap: 6,
   },
-  tipText: {
+  aiBadgeText: {
+    color: "#FFFFFF",
+    fontSize: 11,
+    fontWeight: "800",
+    letterSpacing: 0.5,
+  },
+  summaryText: {
+    fontSize: 15,
+    color: COLORS.textMain,
+    lineHeight: 24,
+  },
+  highlightText: {
+    color: COLORS.primary,
+    fontWeight: "700",
+  },
+  listContainer: {
+    gap: 16,
+  },
+  infoBox: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: COLORS.accent,
+    padding: 14,
+    borderRadius: 16,
+    marginTop: 24,
+    gap: 10,
+  },
+  infoText: {
+    fontSize: 12,
+    color: COLORS.textSecondary,
     flex: 1,
-    fontSize: 13,
-    color: "#64748b",
-    lineHeight: 18,
-  },
-  buttonContainer: {
-    width: "100%",
   },
 });
 
