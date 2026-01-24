@@ -1,14 +1,16 @@
+import { apiClient } from "@/services/api";
+import Slider from "@react-native-community/slider";
 import React, { useState } from "react";
 import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  ScrollView,
-  Alert,
+    ActivityIndicator,
+    Alert,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    View,
 } from "react-native";
-import Slider from "@react-native-community/slider"; // Import Slider
-import { AppButton } from "./ui/appbutton"; 
+import { AppButton } from "./ui/appbutton";
 
 interface ActivityData {
   sleepHours: number;
@@ -19,10 +21,34 @@ interface ActivityData {
   empathy: number;
 }
 
-const moodLabels = ["😩 Lelah Hidup", "😔 Kurang Oke", "😐 Biasa", "😊 Lumayan", "😇 Damai Dunia"];
-const stressLabels = ["🧘 Tenang", "😌 Santai", "😬 Agak Stress", "😰 Stress", "🤯 Burnout"];
-const disciplineLabels = ["😴 Mager Total", "🐌 Lambat", "🚶 Biasa", "🏃 Rajin", "🔥 Super Disiplin"];
-const empathyLabels = ["🙄 Cuek", "🤷 Lumayan Cuek", "😐 Biasa", "🤗 Perhatian", "😇 Malaikat"];
+const moodLabels = [
+  "😩 Lelah Hidup",
+  "😔 Kurang Oke",
+  "😐 Biasa",
+  "😊 Lumayan",
+  "😇 Damai Dunia",
+];
+const stressLabels = [
+  "🧘 Tenang",
+  "😌 Santai",
+  "😬 Agak Stress",
+  "😰 Stress",
+  "🤯 Burnout",
+];
+const disciplineLabels = [
+  "😴 Mager Total",
+  "🐌 Lambat",
+  "🚶 Biasa",
+  "🏃 Rajin",
+  "🔥 Super Disiplin",
+];
+const empathyLabels = [
+  "🙄 Cuek",
+  "🤷 Lumayan Cuek",
+  "😐 Biasa",
+  "🤗 Perhatian",
+  "😇 Malaikat",
+];
 
 interface SliderInputProps {
   label: string;
@@ -31,16 +57,25 @@ interface SliderInputProps {
   labels: string[];
 }
 
-const SliderInput: React.FC<SliderInputProps> = ({ label, value, onChange, labels }) => {
+interface ActivityFormProps {
+  onUpdate?: () => void;
+}
+
+const SliderInput: React.FC<SliderInputProps> = ({
+  label,
+  value,
+  onChange,
+  labels,
+}) => {
   return (
     <View style={styles.sliderContainer}>
       <View style={styles.labelRow}>
         <Text style={styles.inputLabel}>{label}</Text>
         <Text style={styles.valueLabel}>{labels[Math.round(value) - 1]}</Text>
       </View>
-      
+
       <Slider
-        style={{ width: '100%', height: 40 }}
+        style={{ width: "100%", height: 40 }}
         minimumValue={1}
         maximumValue={5}
         step={1}
@@ -48,9 +83,9 @@ const SliderInput: React.FC<SliderInputProps> = ({ label, value, onChange, label
         onValueChange={(val) => onChange(val)}
         minimumTrackTintColor="#10b981" // Warna garis kiri
         maximumTrackTintColor="#a1a6ac" // Warna garis kanan
-        thumbTintColor="#10b981"        // Warna bulatan penggeser
+        thumbTintColor="#10b981" // Warna bulatan penggeser
       />
-      
+
       <View style={styles.rangeIndicator}>
         <Text style={styles.rangeText}>1</Text>
         <Text style={styles.rangeText}>2</Text>
@@ -62,7 +97,7 @@ const SliderInput: React.FC<SliderInputProps> = ({ label, value, onChange, label
   );
 };
 
-export const ActivityForm: React.FC = () => {
+export const ActivityForm: React.FC<ActivityFormProps> = ({ onUpdate }) => {
   const [data, setData] = useState<ActivityData>({
     sleepHours: 7,
     exerciseMinutes: 30,
@@ -71,14 +106,48 @@ export const ActivityForm: React.FC = () => {
     discipline: 3,
     empathy: 3,
   });
+  const [loading, setLoading] = useState(false);
 
-  const handleSave = () => {
-    console.log("📊 Data Aktivitas:", data);
-    Alert.alert("Berhasil!", "Data aktivitas berhasil dicatat.");
+  const handleSave = async () => {
+    try {
+      setLoading(true);
+      console.log("📊 Submitting data:", data);
+
+      const response = await apiClient.predictActivity(data);
+
+      console.log("✅ Prediction received:", response);
+      Alert.alert(
+        "Berhasil!",
+        "Data aktivitas berhasil dicatat dan diprediksi!",
+      );
+
+      // Reset form
+      setData({
+        sleepHours: 7,
+        exerciseMinutes: 30,
+        mood: 3,
+        stress: 3,
+        discipline: 3,
+        empathy: 3,
+      });
+
+      // Trigger parent refresh
+      if (onUpdate) {
+        onUpdate();
+      }
+    } catch (err) {
+      console.error("Error saving activity:", err);
+      Alert.alert("Gagal", "Gagal menyimpan data aktivitas. Coba lagi nanti.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={false}
+    >
       {/* Input Numerik */}
       <View style={styles.inputGroup}>
         <Text style={styles.inputLabel}>Jam Tidur</Text>
@@ -87,7 +156,9 @@ export const ActivityForm: React.FC = () => {
             style={styles.numericInput}
             keyboardType="numeric"
             value={data.sleepHours.toString()}
-            onChangeText={(val) => setData({ ...data, sleepHours: Number(val) || 0 })}
+            onChangeText={(val) =>
+              setData({ ...data, sleepHours: Number(val) || 0 })
+            }
           />
           <Text style={styles.unitText}>jam</Text>
         </View>
@@ -100,7 +171,9 @@ export const ActivityForm: React.FC = () => {
             style={styles.numericInput}
             keyboardType="numeric"
             value={data.exerciseMinutes.toString()}
-            onChangeText={(val) => setData({ ...data, exerciseMinutes: Number(val) || 0 })}
+            onChangeText={(val) =>
+              setData({ ...data, exerciseMinutes: Number(val) || 0 })
+            }
           />
           <Text style={styles.unitText}>menit</Text>
         </View>
@@ -136,11 +209,20 @@ export const ActivityForm: React.FC = () => {
       />
 
       <View style={{ marginTop: 10, marginBottom: 30 }}>
-        <AppButton 
-          title="Simpan Aktivitas" 
-          variant="success" 
-          onPress={handleSave} 
+        <AppButton
+          title={loading ? "Memproses..." : "Simpan Aktivitas"}
+          variant="success"
+          onPress={handleSave}
+          disabled={loading}
         />
+        {loading && (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="small" color="#10b981" />
+            <Text style={styles.loadingText}>
+              Menunggu AI melakukan analisis...
+            </Text>
+          </View>
+        )}
       </View>
     </ScrollView>
   );
@@ -203,5 +285,17 @@ const styles = StyleSheet.create({
   rangeText: {
     fontSize: 10,
     color: "#94a3b8",
+  },
+  loadingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 12,
+    gap: 8,
+  },
+  loadingText: {
+    fontSize: 13,
+    color: "#10b981",
+    fontWeight: "600",
   },
 });

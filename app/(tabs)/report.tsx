@@ -1,19 +1,17 @@
-import React from "react";
-import { 
-  StyleSheet, 
-  View, 
-  Text, 
-  ScrollView, 
-  SafeAreaView 
-} from "react-native";
 import { ReportCard } from "@/components/reportcard";
-import { 
-  Sparkles, 
-  Info, 
-  Heart, 
-  Brain, 
-  Star 
-} from "lucide-react-native"; // Import Ikon
+import { apiClient } from "@/services/api";
+import { useFocusEffect } from "expo-router";
+import { Brain, Heart, Info, Sparkles, Star } from "lucide-react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  RefreshControl,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 const COLORS = {
   background: "#F6FBF7",
@@ -27,11 +25,75 @@ const COLORS = {
 };
 
 const ReportScreen = () => {
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [activityData, setActivityData] = useState<any>(null);
+  const [prediction, setPrediction] = useState<any>(null);
+
+  useEffect(() => {
+    fetchLatestActivity();
+  }, []);
+
+  // Auto-update ketika screen di-focus
+  useFocusEffect(
+    useCallback(() => {
+      fetchLatestActivity();
+    }, []),
+  );
+
+  const fetchLatestActivity = async () => {
+    try {
+      setLoading(true);
+      const response = await apiClient.getLatestActivity();
+
+      console.log("📊 Activity data fetched:", response);
+
+      if (response.activity) {
+        setActivityData(response.activity);
+
+        // Create prediction object from stored scores
+        setPrediction({
+          Physical: {
+            label: "Kesehatan Fisik",
+            score: response.activity.physical_score,
+            summary: "Berdasarkan data tidur dan olahraga kamu.",
+          },
+          Mental: {
+            label: "Kesehatan Mental",
+            score: response.activity.mental_score,
+            summary: "Berdasarkan mood dan stress level kamu.",
+          },
+          Character: {
+            label: "Karakter",
+            score: response.activity.character_score,
+            summary: "Berdasarkan disiplin dan empati kamu.",
+          },
+          Summary:
+            response.activity.summary ||
+            "Tingkatkan konsistensi dalam aktivitas harianmu.",
+        });
+      }
+    } catch (err) {
+      console.error("Error fetching activity:", err);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchLatestActivity();
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView 
+      <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
         {/* JUDUL HALAMAN */}
         <View style={styles.titleSection}>
@@ -41,53 +103,69 @@ const ReportScreen = () => {
           </Text>
         </View>
 
-        {/* AI SUMMARY CARD */}
-        <View style={styles.summaryCard}>
-          <View style={styles.summaryHeader}>
-            <View style={styles.aiBadge}>
-              <Sparkles size={14} color="#FFFFFF" />
-              <Text style={styles.aiBadgeText}>AI INSIGHT</Text>
-            </View>
+        {loading ? (
+          <View style={styles.loaderContainer}>
+            <ActivityIndicator size="large" color={COLORS.primary} />
+            <Text style={styles.loaderText}>Memuat laporan...</Text>
           </View>
-          <Text style={styles.summaryText}>
-            Berdasarkan data minggu ini, kamu menunjukkan stabilitas pada kesehatan mental, namun perlu memperhatikan durasi tidur harianmu. 
-            <Text style={styles.highlightText}> Fokus tingkatkan konsistensi olahraga!</Text>
-          </Text>
-        </View>
+        ) : prediction ? (
+          <>
+            {/* AI SUMMARY CARD */}
+            <View style={styles.summaryCard}>
+              <View style={styles.summaryHeader}>
+                <View style={styles.aiBadge}>
+                  <Sparkles size={14} color="#FFFFFF" />
+                  <Text style={styles.aiBadgeText}>AI INSIGHT</Text>
+                </View>
+              </View>
+              <Text style={styles.summaryText}>{prediction.Summary}</Text>
+            </View>
 
-        {/* LIST LAPORAN DENGAN IKON */}
-        <View style={styles.listContainer}>
-          
-          <ReportCard
-            title="Physical Health"
-            score={78}
-            recommendation="Tingkatkan durasi tidur menjadi 7-8 jam per malam. Tambahkan aktivitas cardio ringan di pagi hari."
-            icon={<Heart size={20} color="red" />} // Kirim ikon sebagai prop
-          />
+            {/* LIST LAPORAN DENGAN IKON */}
+            <View style={styles.listContainer}>
+              <ReportCard
+                title={prediction.Physical?.label || "Physical Health"}
+                score={prediction.Physical?.score || 0}
+                recommendation={prediction.Physical?.summary || ""}
+                icon={<Heart size={20} color="red" />}
+              />
 
-          <ReportCard
-            title="Mental Health"
-            score={85}
-            recommendation="Sangat baik! Pertahankan rutinitas mindfulness dan kurangi penggunaan gadget sebelum tidur."
-            icon={<Brain size={20} color="blue" />} // Kirim ikon sebagai prop
-          />
+              <ReportCard
+                title={prediction.Mental?.label || "Mental Health"}
+                score={prediction.Mental?.score || 0}
+                recommendation={prediction.Mental?.summary || ""}
+                icon={<Brain size={20} color="blue" />}
+              />
 
-          <ReportCard
-            title="Character"
-            score={72}
-            recommendation="Kedisiplinan meningkat, namun tingkat empati perlu perhatian lebih melalui interaksi sosial."
-            icon={<Star size={20} color="orange" />} // Kirim ikon sebagai prop
-          />
+              <ReportCard
+                title={prediction.Character?.label || "Character"}
+                score={prediction.Character?.score || 0}
+                recommendation={prediction.Character?.summary || ""}
+                icon={<Star size={20} color="orange" />}
+              />
+            </View>
 
-        </View>
-
-        {/* INFO BOX */}
-        <View style={styles.infoBox}>
-          <Info size={16} color={COLORS.textSecondary} />
-          <Text style={styles.infoText}>
-            Data diperbarui secara otomatis setiap hari Senin pukul 00.00.
-          </Text>
-        </View>
+            {/* INFO BOX */}
+            <View style={styles.infoBox}>
+              <Info size={16} color={COLORS.textSecondary} />
+              <Text style={styles.infoText}>
+                Terakhir diperbarui:{" "}
+                {activityData?.created_at
+                  ? new Date(activityData.created_at).toLocaleDateString(
+                      "id-ID",
+                    )
+                  : "N/A"}
+              </Text>
+            </View>
+          </>
+        ) : (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>Belum ada data laporan</Text>
+            <Text style={styles.emptySubtext}>
+              Mulai dengan mengisi form aktivitas hari ini
+            </Text>
+          </View>
+        )}
 
         <View style={{ height: 40 }} />
       </ScrollView>
@@ -116,6 +194,31 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: COLORS.textSecondary,
     lineHeight: 22,
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 100,
+  },
+  loaderText: {
+    marginTop: 16,
+    fontSize: 14,
+    color: COLORS.textSecondary,
+  },
+  emptyContainer: {
+    alignItems: "center",
+    paddingVertical: 80,
+  },
+  emptyText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: COLORS.textMain,
+    marginBottom: 8,
+  },
+  emptySubtext: {
+    fontSize: 13,
+    color: COLORS.textSecondary,
   },
   summaryCard: {
     backgroundColor: COLORS.surface,

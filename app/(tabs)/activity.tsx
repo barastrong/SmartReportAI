@@ -1,13 +1,20 @@
-import React from "react";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import { ActivityForm } from "@/components/activityform";
+import { useRouter } from "expo-router";
+import React, { useCallback } from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ActivityForm } from "@/components/activityform"; 
 
 export default function ActivityTabScreen() {
+  const router = useRouter();
+
+  const handleActivitySubmitted = useCallback(() => {
+    // Navigate to report tab untuk lihat hasil AI
+    router.push("/(tabs)/report");
+  }, [router]);
+
   return (
     <SafeAreaView style={styles.container}>
-      
-      <ScrollView 
+      <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
@@ -19,9 +26,9 @@ export default function ActivityTabScreen() {
         </View>
 
         <View style={styles.card}>
-          <ActivityForm />
+          <ActivityForm onUpdate={handleActivitySubmitted} />
         </View>
-        
+
         <View style={{ height: 40 }} />
       </ScrollView>
     </SafeAreaView>

@@ -8,13 +8,13 @@ import { Camera, LogOut } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Image,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -67,10 +67,14 @@ const ProfileScreen = () => {
 
   const pickImage = async () => {
     try {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
 
       if (status !== "granted") {
-        Alert.alert("Izin Ditolak", "Kami membutuhkan izin galeri untuk mengubah foto profil.");
+        Alert.alert(
+          "Izin Ditolak",
+          "Kami membutuhkan izin galeri untuk mengubah foto profil.",
+        );
         return;
       }
 
@@ -84,13 +88,13 @@ const ProfileScreen = () => {
 
       if (!result.canceled && result.assets[0].base64) {
         const base64Photo = `data:image/jpeg;base64,${result.assets[0].base64}`;
-        
+
         // Optimistic update UI
         setUserPhoto(base64Photo);
 
-        // Save to database
+        // Save to database (pass photo as third parameter)
         try {
-          await apiClient.updateProfile(userName, base64Photo);
+          await apiClient.updateProfile(userName, undefined, base64Photo);
           Alert.alert("Berhasil", "Foto profil berhasil diperbarui!");
         } catch (err) {
           console.error("Error updating profile:", err);
@@ -120,13 +124,18 @@ const ProfileScreen = () => {
             <View style={styles.avatarWrapper}>
               <TouchableOpacity activeOpacity={0.8} onPress={pickImage}>
                 {userPhoto ? (
-                  <Image source={{ uri: userPhoto }} style={styles.avatarCircle} />
+                  <Image
+                    source={{ uri: userPhoto }}
+                    style={styles.avatarCircle}
+                  />
                 ) : (
                   <View style={[styles.avatarCircle, styles.avatarPlaceholder]}>
-                    <Text style={styles.avatarText}>{getInitials(userName)}</Text>
+                    <Text style={styles.avatarText}>
+                      {getInitials(userName)}
+                    </Text>
                   </View>
                 )}
-                
+
                 {/* Ikon Edit / Kamera */}
                 <View style={styles.cameraBadge}>
                   <Camera size={18} color="#ffffff" />
@@ -156,7 +165,7 @@ const styles = StyleSheet.create({
   scrollContent: { padding: 24 },
   avatarSection: { alignItems: "center", marginBottom: 32 },
   avatarWrapper: {
-    position: 'relative',
+    position: "relative",
     marginBottom: 16,
   },
   avatarCircle: {
@@ -175,8 +184,8 @@ const styles = StyleSheet.create({
   loaderContainer: {
     width: 100,
     height: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 16,
   },
   cameraBadge: {

@@ -7,6 +7,7 @@ const { addPhotoColumnIfNotExists } = require("./migrations/addPhotoColumn");
 const {
   addRoleAndMottoColumnsIfNotExist,
 } = require("./migrations/addRoleAndMotto");
+const { createActivitiesTable } = require("./migrations/createActivitiesTable");
 
 const app = express();
 const PORT = process.env.SERVER_PORT || 5000;
@@ -18,6 +19,7 @@ app.use(express.urlencoded({ limit: "50mb" }));
 // Run migrations on startup
 addPhotoColumnIfNotExists();
 addRoleAndMottoColumnsIfNotExist();
+createActivitiesTable();
 
 app.use("/api/auth", authRoutes);
 

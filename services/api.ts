@@ -78,4 +78,108 @@ export const apiClient = {
       throw error;
     }
   },
+
+  async predictActivity(activityData: {
+    sleepHours: number;
+    exerciseMinutes: number;
+    mood: number;
+    stress: number;
+    discipline: number;
+    empathy: number;
+  }) {
+    try {
+      const token = await AsyncStorage.getItem("authToken");
+      console.log("🤖 Sending activity data for prediction:", activityData);
+      console.log("🔗 Sending to:", `${API_BASE_URL}/auth/activity/predict`);
+
+      const response = await fetch(`${API_BASE_URL}/auth/activity/predict`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(activityData),
+      });
+
+      console.log("📨 Predict response status:", response.status);
+
+      const data = await response.json();
+      console.log("📥 Predict response data:", data);
+
+      if (!response.ok) {
+        console.error("❌ Predict error response:", data);
+        throw new Error(data.message || "Failed to predict activity");
+      }
+
+      return data;
+    } catch (error: any) {
+      console.error("❌ Predict activity error:", error.message);
+      console.error("❌ Full error:", error);
+      throw error;
+    }
+  },
+
+  async getLatestActivity() {
+    try {
+      const token = await AsyncStorage.getItem("authToken");
+      console.log("📊 Fetching latest activity");
+      console.log("🔗 Fetching from:", `${API_BASE_URL}/auth/activity/latest`);
+
+      const response = await fetch(`${API_BASE_URL}/auth/activity/latest`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log("📨 Response status:", response.status);
+
+      const data = await response.json();
+      console.log("📥 Response data:", data);
+
+      if (!response.ok) {
+        console.error("❌ Error response:", data);
+        throw new Error(data.message || "Failed to fetch activity");
+      }
+
+      return data;
+    } catch (error: any) {
+      console.error("❌ Get activity error:", error.message);
+      console.error("❌ Full error:", error);
+      throw error;
+    }
+  },
+
+  async getActivities() {
+    try {
+      const token = await AsyncStorage.getItem("authToken");
+      console.log("📊 Fetching all activities");
+      console.log("🔗 Fetching from:", `${API_BASE_URL}/auth/activities`);
+
+      const response = await fetch(`${API_BASE_URL}/auth/activities`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log("📨 Response status:", response.status);
+
+      const data = await response.json();
+      console.log("📥 Response data:", data);
+
+      if (!response.ok) {
+        console.error("❌ Error response:", data);
+        throw new Error(data.message || "Failed to fetch activities");
+      }
+
+      return data;
+    } catch (error: any) {
+      console.error("❌ Get activities error:", error.message);
+      console.error("❌ Full error:", error);
+      throw error;
+    }
+  },
 };
