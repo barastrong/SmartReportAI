@@ -116,10 +116,6 @@ export const ActivityForm: React.FC<ActivityFormProps> = ({ onUpdate }) => {
       const response = await apiClient.predictActivity(data);
 
       console.log("✅ Prediction received:", response);
-      Alert.alert(
-        "Berhasil!",
-        "Data aktivitas berhasil dicatat dan diprediksi!",
-      );
 
       // Reset form
       setData({

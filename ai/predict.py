@@ -39,19 +39,19 @@ OUTPUT FORMAT WAJIB (JSON):
   "Physical": {{
     "label": "...",
     "score": 0-100,
-    "summary": "..."
+    "summary": "Deskripsi singkat tentang kondisi fisik (2-3 kalimat): kualitas tidur, aktivitas olahraga, dan energi keseluruhan."
   }},
   "Mental": {{
     "label": "...",
     "score": 0-100,
-    "summary": "..."
+    "summary": "Deskripsi singkat tentang kesehatan mental (2-3 kalimat): tingkat stres, mood, dan keseimbangan emosional."
   }},
   "Character": {{
     "label": "...",
     "score": 0-100,
-    "summary": "..."
+    "summary": "Deskripsi singkat tentang karakter (2-3 kalimat): disiplin, empati, dan integritas diri."
   }},
-  "Summary": "ringkasan akhir AI"
+  "Summary": "ringkasan akhir AI (2-3 kalimat) - rekomendasi positif untuk perbaikan"
 }}
 """
 

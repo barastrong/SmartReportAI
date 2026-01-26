@@ -115,21 +115,6 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ onUpdate }) => {
         </View>
       </View>
 
-      {/* Role Input - Read Only */}
-      {role ? (
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Role</Text>
-          <View style={styles.inputWrapper}>
-            <User size={20} color="#94a3b8" />
-            <Text
-              style={[styles.input, styles.textValue, styles.disabledInput]}
-            >
-              {role}
-            </Text>
-          </View>
-        </View>
-      ) : null}
-
       {/* Motto Input - Editable */}
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Deskripsi / Motto</Text>

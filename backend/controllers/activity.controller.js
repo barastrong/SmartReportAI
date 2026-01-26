@@ -20,8 +20,8 @@ exports.predictActivity = async (req, res) => {
       return res.status(400).json({ message: "Semua field harus diisi" });
     }
 
-    console.log("🤖 Processing AI prediction for user:", userId);
-    console.log("📊 Activity data:", {
+    console.log("Processing AI prediction for user:", userId);
+    console.log("Activity data:", {
       sleepHours,
       exerciseMinutes,
       mood,
@@ -61,7 +61,7 @@ exports.predictActivity = async (req, res) => {
 
     pythonProcess.on("close", async (code) => {
       if (code !== 0) {
-        console.error("❌ Python script error:", pythonError);
+        console.error("Python script error:", pythonError);
         return res.status(500).json({
           message: "Gagal memproses prediksi AI",
           error: pythonError,
@@ -90,14 +90,14 @@ exports.predictActivity = async (req, res) => {
           ],
         );
 
-        console.log("✅ Activity saved to database");
+        console.log("Activity saved to database");
 
         res.json({
           message: "Prediksi berhasil dibuat",
           prediction: prediction,
         });
       } catch (parseError) {
-        console.error("❌ Parse error:", parseError.message);
+        console.error("Parse error:", parseError.message);
         res.status(500).json({
           message: "Error parsing AI response",
           error: parseError.message,
@@ -105,7 +105,7 @@ exports.predictActivity = async (req, res) => {
       }
     });
   } catch (err) {
-    console.error("❌ Predict activity error:", err.message);
+    console.error("Predict activity error:", err.message);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
@@ -126,7 +126,7 @@ exports.getActivities = async (req, res) => {
       activities: rows,
     });
   } catch (err) {
-    console.error("❌ Get activities error:", err.message);
+    console.error("Get activities error:", err.message);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
@@ -151,7 +151,7 @@ exports.getLatestActivity = async (req, res) => {
       activity: rows[0],
     });
   } catch (err) {
-    console.error("❌ Get latest activity error:", err.message);
+    console.error("Get latest activity error:", err.message);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };

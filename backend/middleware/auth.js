@@ -13,7 +13,7 @@ const authMiddleware = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (err) {
-    console.error("❌ Auth middleware error:", err.message);
+    console.error("Auth middleware error:", err.message);
     res.status(401).json({ message: "Token tidak valid" });
   }
 };

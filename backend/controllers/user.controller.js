@@ -18,7 +18,7 @@ exports.getProfile = async (req, res) => {
       user: rows[0],
     });
   } catch (err) {
-    console.error("❌ Get profile error:", err.message);
+    console.error("Get profile error:", err.message);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
@@ -32,9 +32,9 @@ exports.updateProfile = async (req, res) => {
       return res.status(400).json({ message: "Nama tidak boleh kosong" });
     }
 
-    console.log("📝 Updating profile for user:", userId);
-    console.log("📸 Photo included:", !!photo);
-    console.log("💭 Motto:", motto || "not provided");
+    console.log("Updating profile for user:", userId);
+    console.log("Photo included:", !!photo);
+    console.log("Motto:", motto || "not provided");
 
     await db.query(
       "UPDATE users SET name = ?, motto = ?, photo = ? WHERE id = ?",
@@ -46,13 +46,13 @@ exports.updateProfile = async (req, res) => {
       [userId],
     );
 
-    console.log("✅ Profile updated successfully");
+    console.log("Profile updated successfully");
     res.json({
       message: "Profile berhasil diperbarui",
       user: rows[0],
     });
   } catch (err) {
-    console.error("❌ Update profile error:", err.message);
+    console.error("Update profile error:", err.message);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };

@@ -3,11 +3,6 @@ const cors = require("cors");
 require("dotenv").config();
 
 const authRoutes = require("./routes/route");
-const { addPhotoColumnIfNotExists } = require("./migrations/addPhotoColumn");
-const {
-  addRoleAndMottoColumnsIfNotExist,
-} = require("./migrations/addRoleAndMotto");
-const { createActivitiesTable } = require("./migrations/createActivitiesTable");
 
 const app = express();
 const PORT = process.env.SERVER_PORT || 5000;
@@ -16,15 +11,10 @@ app.use(cors());
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb" }));
 
-// Run migrations on startup
-addPhotoColumnIfNotExists();
-addRoleAndMottoColumnsIfNotExist();
-createActivitiesTable();
-
 app.use("/api/auth", authRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Auth API running 🚀");
+  res.send("Auth API running");
 });
 
 app.listen(PORT, () => {

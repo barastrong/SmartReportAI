@@ -30,24 +30,21 @@ exports.register = async (req, res) => {
       return res.status(409).json({ message: "Email sudah terdaftar" });
     }
 
-    console.log("🔐 Hashing password untuk:", email);
+    console.log("Hashing password untuk:", email);
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    console.log(
-      "✅ Password di-hash:",
-      hashedPassword.substring(0, 20) + "...",
-    );
+    console.log("Password di-hash:", hashedPassword.substring(0, 20) + "...");
 
     await db.query(
       "INSERT INTO users (name, email, role, password) VALUES (?, ?, ?, ?)",
       [name, email, defaultRole, hashedPassword],
     );
 
-    console.log("✅ Register berhasil untuk:", email);
-    console.log("👤 Role assigned:", defaultRole);
+    console.log("Register berhasil untuk:", email);
+    console.log("Role assigned:", defaultRole);
     res.status(201).json({ message: "Register berhasil" });
   } catch (err) {
-    console.error("❌ Register error:", err.message);
+    console.error("Register error:", err.message);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
@@ -86,8 +83,8 @@ exports.login = async (req, res) => {
       { expiresIn: JWT_EXPIRE },
     );
 
-    console.log("✅ Login berhasil untuk:", email);
-    console.log("🔑 Token generated");
+    console.log("Login berhasil untuk:", email);
+    console.log("Token generated");
 
     res.json({
       message: "Login berhasil",
@@ -96,7 +93,7 @@ exports.login = async (req, res) => {
         id: userData.id,
         name: userData.name,
         email: userData.email,
-        role: userData.role
+        role: userData.role,
       },
     });
   } catch (err) {

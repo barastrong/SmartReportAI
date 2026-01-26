@@ -60,8 +60,8 @@ export default function OnboardingScreen() {
         if (seen === "true") {
           router.replace("/login");
         }
-      } catch (e) {
-        // ignore and continue showing onboarding
+      } catch (error) {
+        console.log("Error checking onboarding status:", error);
       }
     };
     checkSeen();
@@ -117,12 +117,12 @@ export default function OnboardingScreen() {
                 try {
                   await AsyncStorage.setItem("has_seen_onboarding", "true");
                 } catch (e) {
-                  // ignore set error
+                  console.log("Error setting onboarding status:", e);
                 }
                 router.replace("/login");
               }}
             >
-              <Text style={styles.getStartedText}>Let's Started</Text>
+              <Text style={styles.getStartedText}>Ayo Mulai</Text>
             </TouchableOpacity>
           </View>
         )}
