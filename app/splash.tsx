@@ -4,12 +4,13 @@ import { BarChart3, Cpu, Sparkles } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import {
   Dimensions,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+
+import { SafeAreaView  } from "react-native-safe-area-context";
 
 const { width } = Dimensions.get("window");
 
