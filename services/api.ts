@@ -6,8 +6,8 @@ export const apiClient = {
   async getProfile() {
     try {
       const token = await AsyncStorage.getItem("authToken");
-      console.log("📍 Token:", token?.substring(0, 20) + "...");
-      console.log("🔗 Fetching from:", `${API_BASE_URL}/auth/profile`);
+      console.log("Token:", token?.substring(0, 20) + "...");
+      console.log("Fetching from:", `${API_BASE_URL}/auth/profile`);
 
       const response = await fetch(`${API_BASE_URL}/auth/profile`, {
         method: "GET",
@@ -17,21 +17,21 @@ export const apiClient = {
         },
       });
 
-      console.log("📨 Response status:", response.status);
-      console.log("📨 Response ok:", response.ok);
+      console.log("Response status:", response.status);
+      console.log("Response ok:", response.ok);
 
       const data = await response.json();
-      console.log("📥 Response data:", data);
+      console.log("Response data:", data);
 
       if (!response.ok) {
-        console.error("❌ Error response:", data);
+        console.error("Error response:", data);
         throw new Error(data.message || "Failed to fetch profile");
       }
 
       return data;
     } catch (error: any) {
-      console.error("❌ Get profile error:", error.message);
-      console.error("❌ Full error:", error);
+      console.error("Get profile error:", error.message);
+      console.error("Full error:", error);
       throw error;
     }
   },
@@ -39,9 +39,9 @@ export const apiClient = {
   async updateProfile(name: string, motto?: string, photo?: string) {
     try {
       const token = await AsyncStorage.getItem("authToken");
-      console.log("🔄 Updating profile with name:", name);
-      console.log("💭 Motto:", motto || "not provided");
-      console.log("🔗 Sending to:", `${API_BASE_URL}/auth/profile`);
+      console.log(" Updating profile with name:", name);
+      console.log(" Motto:", motto || "not provided");
+      console.log(" Sending to:", `${API_BASE_URL}/auth/profile`);
 
       const body: any = { name };
       if (motto !== undefined) {
@@ -49,7 +49,7 @@ export const apiClient = {
       }
       if (photo) {
         body.photo = photo;
-        console.log("📸 Photo included, size:", photo.length);
+        console.log(" Photo included, size:", photo.length);
       }
 
       const response = await fetch(`${API_BASE_URL}/auth/profile`, {
@@ -61,20 +61,20 @@ export const apiClient = {
         body: JSON.stringify(body),
       });
 
-      console.log("📨 Update response status:", response.status);
+      console.log("Update response status:", response.status);
 
       const data = await response.json();
-      console.log("📥 Update response data:", data);
+      console.log("Update response data:", data);
 
       if (!response.ok) {
-        console.error("❌ Update error response:", data);
+        console.error("Update error response:", data);
         throw new Error(data.message || "Failed to update profile");
       }
 
       return data;
     } catch (error: any) {
-      console.error("❌ Update profile error:", error.message);
-      console.error("❌ Full error:", error);
+      console.error("Update profile error:", error.message);
+      console.error("Full error:", error);
       throw error;
     }
   },
@@ -89,8 +89,8 @@ export const apiClient = {
   }) {
     try {
       const token = await AsyncStorage.getItem("authToken");
-      console.log("🤖 Sending activity data for prediction:", activityData);
-      console.log("🔗 Sending to:", `${API_BASE_URL}/auth/activity/predict`);
+      console.log("Sending activity data for prediction:", activityData);
+      console.log("Sending to:", `${API_BASE_URL}/auth/activity/predict`);
 
       const response = await fetch(`${API_BASE_URL}/auth/activity/predict`, {
         method: "POST",
@@ -101,20 +101,20 @@ export const apiClient = {
         body: JSON.stringify(activityData),
       });
 
-      console.log("📨 Predict response status:", response.status);
+      console.log("Predict response status:", response.status);
 
       const data = await response.json();
-      console.log("📥 Predict response data:", data);
+      console.log("Predict response data:", data);
 
       if (!response.ok) {
-        console.error("❌ Predict error response:", data);
+        console.error("Predict error response:", data);
         throw new Error(data.message || "Failed to predict activity");
       }
 
       return data;
     } catch (error: any) {
-      console.error("❌ Predict activity error:", error.message);
-      console.error("❌ Full error:", error);
+      console.error("Predict activity error:", error.message);
+      console.error("Full error:", error);
       throw error;
     }
   },
@@ -122,8 +122,8 @@ export const apiClient = {
   async getLatestActivity() {
     try {
       const token = await AsyncStorage.getItem("authToken");
-      console.log("📊 Fetching latest activity");
-      console.log("🔗 Fetching from:", `${API_BASE_URL}/auth/activity/latest`);
+      console.log("Fetching latest activity");
+      console.log("Fetching from:", `${API_BASE_URL}/auth/activity/latest`);
 
       const response = await fetch(`${API_BASE_URL}/auth/activity/latest`, {
         method: "GET",
@@ -133,20 +133,20 @@ export const apiClient = {
         },
       });
 
-      console.log("📨 Response status:", response.status);
+      console.log("Response status:", response.status);
 
       const data = await response.json();
-      console.log("📥 Response data:", data);
+      console.log("Response data:", data);
 
       if (!response.ok) {
-        console.error("❌ Error response:", data);
+        console.error("Error response:", data);
         throw new Error(data.message || "Failed to fetch activity");
       }
 
       return data;
     } catch (error: any) {
-      console.error("❌ Get activity error:", error.message);
-      console.error("❌ Full error:", error);
+      console.error("Get activity error:", error.message);
+      console.error("Full error:", error);
       throw error;
     }
   },
@@ -154,8 +154,8 @@ export const apiClient = {
   async getActivities() {
     try {
       const token = await AsyncStorage.getItem("authToken");
-      console.log("📊 Fetching all activities");
-      console.log("🔗 Fetching from:", `${API_BASE_URL}/auth/activities`);
+      console.log("Fetching all activities");
+      console.log("Fetching from:", `${API_BASE_URL}/auth/activities`);
 
       const response = await fetch(`${API_BASE_URL}/auth/activities`, {
         method: "GET",
@@ -165,20 +165,20 @@ export const apiClient = {
         },
       });
 
-      console.log("📨 Response status:", response.status);
+      console.log("Response status:", response.status);
 
       const data = await response.json();
-      console.log("📥 Response data:", data);
+      console.log("Response data:", data);
 
       if (!response.ok) {
-        console.error("❌ Error response:", data);
+        console.error("Error response:", data);
         throw new Error(data.message || "Failed to fetch activities");
       }
 
       return data;
     } catch (error: any) {
-      console.error("❌ Get activities error:", error.message);
-      console.error("❌ Full error:", error);
+      console.error("Get activities error:", error.message);
+      console.error("Full error:", error);
       throw error;
     }
   },

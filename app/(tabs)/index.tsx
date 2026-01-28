@@ -1,7 +1,6 @@
 import { StatCard } from "@/components/statcard";
 import { AppButton } from "@/components/ui/appbutton";
 import { apiClient } from "@/services/api";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useRouter } from "expo-router";
 import {
   BarChart3,
@@ -28,18 +27,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const screenWidth = Dimensions.get("window").width;
 
-interface ActivityData {
-  physical_score: number;
-  mental_score: number;
-  character_score: number;
-  created_at: string;
-}
-
 const DashboardScreen: React.FC = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [showGuide, setShowGuide] = useState(false);
+  const [showGuide, setShowGuide] = useState(true);
   const [userName, setUserName] = useState("User");
   const [healthScore, setHealthScore] = useState(0);
   const [mentalScore, setMentalScore] = useState(0);
@@ -54,21 +46,8 @@ const DashboardScreen: React.FC = () => {
   });
 
   useEffect(() => {
-    checkFirstTimeVisit();
     fetchDashboardData();
   }, []);
-
-  const checkFirstTimeVisit = async () => {
-    try {
-      const hasSeenGuide = await AsyncStorage.getItem("has_seen_index_guide");
-      if (!hasSeenGuide) {
-        setShowGuide(true);
-        await AsyncStorage.setItem("has_seen_index_guide", "true");
-      }
-    } catch (err) {
-      console.error("Error checking guide status:", err);
-    }
-  };
 
   // Auto-update ketika screen di-focus
   useFocusEffect(
@@ -94,7 +73,7 @@ const DashboardScreen: React.FC = () => {
           setMentalScore(activityResponse.activity.mental_score || 0);
           setCharacterScore(activityResponse.activity.character_score || 0);
         }
-      } catch (latestErr) {
+      } catch {
         console.log("No latest activity yet");
       }
 
@@ -107,7 +86,6 @@ const DashboardScreen: React.FC = () => {
           activitiesResponse.activities.length > 0
         ) {
           // Group activities by day of week
-          const dayNames = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
           const dayScores: { [key: number]: number[] } = {
             0: [], // Minggu
             1: [], // Senin
@@ -166,7 +144,7 @@ const DashboardScreen: React.FC = () => {
             ],
           });
         }
-      } catch (activitiesErr) {
+      } catch {
         console.log("No activities yet, using default chart data");
       }
     } catch (err) {
@@ -239,8 +217,8 @@ const DashboardScreen: React.FC = () => {
                 <View style={styles.stepContent}>
                   <Text style={styles.stepNumber}>Input Aktivitas</Text>
                   <Text style={styles.stepDescription}>
-                    Pergi ke tab "Aktivitas" untuk mencatat data harian Anda
-                    seperti tidur, olahraga, mood, dan stress level.
+                    Pergi ke tab &#34;Aktivitas&#34; untuk mencatat data harian
+                    Anda seperti tidur, olahraga, mood, dan stress level.
                   </Text>
                 </View>
               </View>
@@ -265,8 +243,9 @@ const DashboardScreen: React.FC = () => {
                 <View style={styles.stepContent}>
                   <Text style={styles.stepNumber}>Lihat Laporan</Text>
                   <Text style={styles.stepDescription}>
-                    Buka tab "Laporan" untuk melihat hasil analisis AI dengan
-                    score fisik, mental, dan karakter beserta rekomendasinya.
+                    Buka tab &#34;Laporan&#34; untuk melihat hasil analisis AI
+                    dengan score fisik, mental, dan karakter beserta
+                    rekomendasinya.
                   </Text>
                 </View>
               </View>
@@ -322,8 +301,18 @@ const DashboardScreen: React.FC = () => {
         >
           {/* Greeting Section */}
           <View style={styles.greetingSection}>
-            <Text style={styles.userName}>Halo, {userName} 👋</Text>
-            <Text style={styles.subtitle}>Bagaimana kabarmu hari ini?</Text>
+            <View style={styles.greetingHeader}>
+              <View>
+                <Text style={styles.userName}>Halo, {userName} 👋</Text>
+                <Text style={styles.subtitle}>Bagaimana kabarmu hari ini?</Text>
+              </View>
+              <TouchableOpacity
+                style={styles.helpButton}
+                onPress={() => setShowGuide(true)}
+              >
+                <HelpCircle size={24} color="#10b981" />
+              </TouchableOpacity>
+            </View>
           </View>
 
           {loading ? (
@@ -409,6 +398,14 @@ const styles = StyleSheet.create({
   },
   greetingSection: {
     marginBottom: 24,
+  },
+  greetingHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+  },
+  helpButton: {
+    padding: 8,
   },
   userName: {
     fontSize: 26,

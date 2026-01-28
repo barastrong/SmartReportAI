@@ -47,7 +47,7 @@ const ReportScreen = () => {
       setLoading(true);
       const response = await apiClient.getLatestActivity();
 
-      console.log("📊 Activity data fetched:", response);
+      console.log("Activity data fetched:", response);
 
       if (response.activity) {
         setActivityData(response.activity);

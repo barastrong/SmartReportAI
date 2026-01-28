@@ -1,7 +1,6 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { BarChart3, Cpu, Sparkles } from "lucide-react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Dimensions,
   StyleSheet,
@@ -10,7 +9,7 @@ import {
   View,
 } from "react-native";
 
-import { SafeAreaView  } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width } = Dimensions.get("window");
 
@@ -53,20 +52,6 @@ const onboardingData = [
 export default function OnboardingScreen() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const router = useRouter();
-
-  useEffect(() => {
-    const checkSeen = async () => {
-      try {
-        const seen = await AsyncStorage.getItem("has_seen_onboarding");
-        if (seen === "true") {
-          router.replace("/login");
-        }
-      } catch (error) {
-        console.log("Error checking onboarding status:", error);
-      }
-    };
-    checkSeen();
-  }, [router]);
 
   const handleNext = () => {
     if (currentIndex < onboardingData.length - 1) {
@@ -114,12 +99,7 @@ export default function OnboardingScreen() {
           <View style={styles.finalContainer}>
             <TouchableOpacity
               style={styles.getStartedButton}
-              onPress={async () => {
-                try {
-                  await AsyncStorage.setItem("has_seen_onboarding", "true");
-                } catch (e) {
-                  console.log("Error setting onboarding status:", e);
-                }
+              onPress={() => {
                 router.replace("/login");
               }}
             >
